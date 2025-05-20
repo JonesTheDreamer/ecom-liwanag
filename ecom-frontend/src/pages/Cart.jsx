@@ -44,7 +44,10 @@ const Cart = () => {
     const cartItem = carts.find((item) => item.id === id);
     const newQty = cartItem.quantity + delta;
     if (newQty < 1) return;
-    if (newQty > cartItem.product.stock) return;
+    if (newQty > cartItem.product.stock) {
+      alert("Not enough stock");
+      return;
+    }
     try {
       await cartMethods.updateCart(id, { _method: "PUT", quantity: newQty });
       setCarts((prev) =>

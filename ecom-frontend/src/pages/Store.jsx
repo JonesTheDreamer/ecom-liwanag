@@ -11,28 +11,19 @@ export default function Store() {
   const productMethods = useProduct();
 
   useEffect(() => {
-    if (
-      !sessionStorage.getItem("token") ||
-      JSON.parse(sessionStorage.getItem("user")).role !== "customer"
-    ) {
-      redirect("/");
-    } else {
-      //   console.log(JSON.parse(sessionStorage.getItem("user")));
-
-      const fetchProducts = async () => {
-        try {
-          const response = await productMethods.getProducts();
-          setProducts(response.products);
-          setFiltered(response.products);
-        } catch (err) {
-          console.error("Error fetching products:", err);
-        }
-      };
-      fetchProducts();
-    }
+    const fetchProducts = async () => {
+      try {
+        const response = await productMethods.getProducts();
+        setProducts(response.products);
+        setFiltered(response.products);
+        console.log(response.products);
+        console.log("hello");
+      } catch (err) {
+        console.error("Error fetching products:", err);
+      }
+    };
+    fetchProducts();
   }, []);
-
-  useEffect(() => {}, []);
 
   useEffect(() => {
     const result = products.filter((p) =>
@@ -57,7 +48,16 @@ export default function Store() {
           {filtered.map((product) => (
             <div
               key={product.id}
-              onClick={() => redirect(`/product/${product.id}`)}
+              onClick={() => {
+                if (
+                  sessionStorage.getItem("token") !== null &&
+                  sessionStorage.getItem("user") !== null
+                ) {
+                  redirect(`/product/${product.id}`);
+                } else {
+                  redirect(`/`);
+                }
+              }}
               className="bg-white rounded-2xl shadow-md p-4 cursor-pointer transform transition duration-300 hover:scale-105"
             >
               <img

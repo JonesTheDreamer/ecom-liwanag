@@ -1,31 +1,37 @@
 import React, { createContext, useContext } from "react";
-import axios from "./axios";
+import axiosInstance from "./axios";
+import axios from "axios";
 
 const ProductContext = createContext();
 
 export const ProductProvider = ({ children }) => {
   const getProducts = async () => {
-    const res = await axios.get("product");
-    return res.data;
+    try {
+      const res = await axios.get("http://127.0.0.1:8000/api/product");
+      return res.data;
+    } catch (e) {
+      console.log(e.message);
+      alert("Something went wrong");
+    }
   };
 
   const getAProduct = async (id) => {
-    const res = await axios.get(`product/${id}`);
+    const res = await axiosInstance.get(`product/${id}`);
     return res.data;
   };
 
   const createProduct = async (formData) => {
-    const res = await axios.post("product", formData);
+    const res = await axiosInstance.post("product", formData);
     return res;
   };
 
   const updateProduct = async (id, formData) => {
-    const res = await axios.post(`product/${id}`, formData);
+    const res = await axiosInstance.post(`product/${id}`, formData);
     return res;
   };
 
   const deleteProduct = async (id) => {
-    const res = await axios.delete(`product/${id}`);
+    const res = await axiosInstance.delete(`product/${id}`);
     return res;
   };
 
